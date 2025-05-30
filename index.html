@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roll Call - Gym Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #FAFAFA;
+            color: #0F1417;
+            line-height: 1.5;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 268px;
+            background: #FAFAFA;
+            padding: 15px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 0;
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            width: 15px;
+            height: 15px;
+            background: #0F1417;
+            border-radius: 2px;
+        }
+
+        .gym-name {
+            color: #0F1417;
+            font-family: 'Manrope', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            border-radius: 35px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-family: 'Manrope', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: #0F1417;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: #EBEDF2;
+        }
+
+        .nav-icon {
+            width: 23px;
+            height: 23px;
+            background: #0F1417;
+            border-radius: 2px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 268px;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            background: #EBEDF2;
+            border-radius: 12px;
+            padding: 0;
+            min-width: 200px;
+        }
+
+        .search-icon {
+            width: 23px;
+            height: 23px;
+            background: #5C738A;
+            margin: 0 15px;
+        }
+
+        .search-input {
+            background: none;
+            border: none;
+            outline: none;
+            padding: 8px 15px 8px 0;
+            color: #5C738A;
+            font-size: 15px;
+            flex: 1;
+        }
+
+        .search-input::placeholder {
+            color: #5C738A;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 39px;
+            height: 39px;
+            border-radius: 50%;
+            background: #EBEDF2;
+        }
+
+        .logout-btn {
+            background: #F0F2F5;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 12px;
+            color: #121417;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* Page Title */
+        .page-title {
+            font-family: 'Manrope', sans-serif;
+            font-size: 31px;
+            font-weight: 700;
+            color: #0F1417;
+            margin-bottom: 30px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
+            gap: 17px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #E8EDF5;
+            border-radius: 9px;
+            padding: 26px;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .stat-label {
+            color: #0D141C;
+            font-size: 17px;
+            font-weight: 500;
+            line-height: 26px;
+        }
+
+        .stat-value {
+            color: #0D141C;
+            font-size: 26px;
+            font-weight: 700;
+            line-height: 32px;
+        }
+
+        .stat-change {
+            font-size: 17px;
+            font-weight: 500;
+            line-height: 26px;
+        }
+
+        .stat-change.positive {
+            color: #088738;
+        }
+
+        .stat-change.neutral {
+            color: #4A739C;
+        }
+
+        /* Members Table */
+        .members-container {
+            background: #FAFAFA;
+            border-radius: 12px;
+            border: 1px solid #D4DBE3;
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 167px 177px 186px 145px 125px auto;
+            background: #FAFAFA;
+        }
+
+        .table-header-cell {
+            padding: 12px 15px;
+            color: #0F1417;
+            font-family: 'Manrope', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 20px;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 167px 177px 186px 145px 125px auto;
+            border-top: 1px solid #E5E8EB;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .table-row:hover {
+            background: #F8F9FA;
+        }
+
+        .table-cell {
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            line-height: 20px;
+        }
+
+        .table-cell.name {
+            color: #0F1417;
+            font-weight: 400;
+        }
+
+        .table-cell.membership {
+            color: #5C738A;
+        }
+
+        .status-badge {
+            background: #EBEDF2;
+            border-radius: 12px;
+            padding: 4px 15px;
+            color: #0F1417;
+            font-size: 13px;
+            font-weight: 500;
+            text-align: center;
+            width: 100%;
+            max-width: 100px;
+        }
+
+        .status-badge.active {
+            background: #EBEDF2;
+            color: #0F1417;
+        }
+
+        .status-badge.inactive {
+            background: #F8D7DA;
+            color: #721C24;
+        }
+
+        /* Filter Controls */
+        .filter-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: #EBEDF2;
+            border: none;
+            border-radius: 12px;
+            padding: 8px 16px;
+            color: #0F1417;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-btn:hover {
+            background: #D4DBE3;
+        }
+
+        .filter-icon {
+            width: 19px;
+            height: 19px;
+            background: #0F1417;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #0F1417;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: #4A739C;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #4A739C;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3A5F8C;
+        }
+
+        .btn-danger {
+            background: #DC3545;
+            color: white;
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+
+        .btn-edit {
+            background: #4A739C;
+            color: white;
+            padding: 8px 12px;
+            font-size: 14px;
+            margin-right: 5px;
+        }
+
+        /* Authentication Styles */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #FAFAFA;
+        }
+
+        .auth-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            max-width: 90%;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .auth-tab.active {
+            color: #4A739C;
+            border-bottom: 2px solid #4A739C;
+            margin-bottom: -2px;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .auth-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #0F1417;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        /* Hidden states */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-header, .table-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
+
+        /* Payment Tabs */
+        .payment-tab.active {
+            color: #121417 !important;
+            border-bottom: 3px solid #4A739C !important;
+        }
+
+        .payment-tab:hover {
+            color: #121417 !important;
+        }
+
+        /* Member Profile Styles */
+        .profile-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-notes-section {
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .notes-textarea {
+            width: 100%;
+            min-height: 100px;
+            border: none;
+            outline: none;
+            resize: vertical;
+            font-family: Inter;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .save-notes-btn {
+            background: #4A739C;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .save-notes-btn:hover {
+            background: #3A5F8C;
+        }
+
+        /* Tag Styles */
+        .tag-item {
+            background: #E8EDF5;
+            border-radius: 12px;
+            padding: 6px 12px;
+            color: #121417;
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tag-remove {
+            cursor: pointer;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .tag-remove:hover {
+            color: #333;
+        }
+
+        /* Responsive Member Profile */
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+            }
+            
+            .profile-notes-section {
+                max-width: 100%;
+            }
+        }
+    </style>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDkx4fgmz0dgXmLD28RpCt7ZefgQ6-LxkU",
+            authDomain: "gymappplayground.firebaseapp.com",
+            projectId: "gymappplayground",
+            storageBucket: "gymappplayground.firebasestorage.app",
+            messagingSenderId: "166173719992",
+            appId: "1:166173719992:web:d635612ef906b0be9d634d",
+            measurementId: "G-4MSKZBLVCF"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+    </script>
+</head>
+<body>
+    <!-- Authentication Container -->
+    <div id="authContainer" class="auth-container">
+        <div class="auth-card">
+            <h1 class="auth-title">Roll Call</h1>
+            
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="showAuthForm('login')">Login</button>
+                <button class="auth-tab" onclick="showAuthForm('signup')">Sign Up</button>
+            </div>
+            
+            <form id="loginForm" class="auth-form active">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+            </form>
+
+            <form id="signupForm" class="auth-form">
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Sign Up</button>
+            </form>
+
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
+                <button onclick="createSampleAccounts()" class="btn" style="background: #666; color: white;">
+                    Create Sample Accounts
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="mainApp" class="app-container hidden">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo-section">
+                <div class="logo-icon"></div>
+                <div class="gym-name">Roll Call</div>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-item active" data-page="dashboard">
+                    <div class="nav-icon"></div>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" data-page="members">
+                    <div class="nav-icon"></div>
+                    <span>Members</span>
+                </div>
+                <div class="nav-item" data-page="leads">
+                    <div class="nav-icon"></div>
+                    <span>Leads</span>
+                </div>
+                <div class="nav-item" data-page="schedule">
+                    <div class="nav-icon"></div>
+                    <span>Schedule</span>
+                </div>
+                <div class="nav-item" data-page="financial">
+                    <div class="nav-icon"></div>
+                    <span>Financial</span>
+                </div>
+                <div class="nav-item" data-page="web-mobile">
+                    <div class="nav-icon"></div>
+                    <span>Web & Mobile</span>
+                </div>
+                <div class="nav-item" data-page="analytics">
+                    <div class="nav-icon"></div>
+                    <span>Analytics</span>
+                </div>
+                <div class="nav-item" data-page="account">
+                    <div class="nav-icon"></div>
+                    <span>Account</span>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="search-container">
+                    <div class="search-icon"></div>
+                    <input type="text" class="search-input" placeholder="Search" id="globalSearch">
+                </div>
+                
+                <div class="user-section">
+                    <span id="userEmail" style="font-size: 14px; color: #5C738A;"></span>
+                    <div class="user-avatar"></div>
+                    <button class="logout-btn" onclick="gymManager.logout()">Logout</button>
+                </div>
+            </div>
+
+            <!-- Dashboard Page -->
+            <div id="dashboardPage" class="page">
+                <h1 class="page-title">Dashboard</h1>
+                
+                <div class="filter-controls">
+                    <button class="filter-btn">
+                        Last 30 days
+                        <div class="filter-icon"></div>
+                    </button>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Active Members</div>
+                        <div class="stat-value" id="activeMembersCount">0</div>
+                        <div class="stat-change positive" id="memberChange">+0 members</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Revenue</div>
+                        <div class="stat-value" id="revenueAmount">$0</div>
+                        <div class="stat-change neutral">0% increase</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Overdue Invoices</div>
+                        <div class="stat-value" id="overdueCount">0</div>
+                        <div class="stat-change neutral">$0 overdue</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Leads w. Trials</div>
+                        <div class="stat-value" id="trialsCount">0</div>
+                        <div class="stat-change neutral">0 need attention</div>
+                    </div>
+                </div>
+
+                <!-- Add Member Form -->
+                <div style="background: white; padding: 30px; border-radius: 12px; margin-top: 30px; border: 1px solid #D4DBE3;">
+                    <h2 style="margin-bottom: 20px; color: #0F1417;">Add New Member</h2>
+                    <form id="memberForm">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 20px;">
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone</label>
+                                <input type="tel" id="phone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="membershipType">Membership Type</label>
+                                <select id="membershipType" required>
+                                    <option value="">Select Membership</option>
+                                    <option value="basic">Basic - $29/month</option>
+                                    <option value="premium">Premium - $49/month</option>
+                                    <option value="vip">VIP - $79/month</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="startDate">Start Date</label>
+                                <input type="date" id="startDate" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Member</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Members Page -->
+            <div id="membersPage" class="page hidden">
+                <h1 class="page-title">Members</h1>
+                
+                <div class="filter-controls">
+                    <button class="filter-btn" data-filter="membership">
+                        Membership
+                        <div class="filter-icon"></div>
+                    </button>
+                    <button class="filter-btn" data-filter="status">
+                        Status
+                        <div class="filter-icon"></div>
+                    </button>
+                    <button class="filter-btn" data-filter="attention">
+                        Needs Attention
+                        <div class="filter-icon"></div>
+                    </button>
+                </div>
+                
+                <div class="members-container">
+                    <div class="table-header">
+                        <div class="table-header-cell">First Name</div>
+                        <div class="table-header-cell">Last Name</div>
+                        <div class="table-header-cell">Membership</div>
+                        <div class="table-header-cell" style="text-align: center;">Status</div>
+                        <div class="table-header-cell">Member For</div>
+                        <div class="table-header-cell">Actions</div>
+                    </div>
+                    <div id="membersTableBody">
+                        <!-- Members will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member Profile Page -->
+            <div id="memberProfilePage" class="page hidden">
+                <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 30px;">
+                    <button class="btn" style="background: #F0F2F5; color: #121417; padding: 8px 16px;" onclick="gymManager.showPage('members')">
+                        ← Back to Members
+                    </button>
+                    <h1 style="color: #9B9B9B; font-size: 31px; font-family: Manrope; font-weight: 700; margin: 0;">Member Card</h1>
+                </div>
+
+                <div id="memberProfileContent" style="display: flex; gap: 40px;">
+                    <!-- Left Column - Main Content -->
+                    <div style="flex: 1; max-width: 800px;">
+                        <!-- Profile Header -->
+                        <div style="display: flex; align-items: flex-start; gap: 20px; margin-bottom: 40px;">
+                            <img id="profileAvatar" src="https://via.placeholder.com/80x80/E8EDF5/9B9B9B?text=Profile" alt="Profile" style="width: 80px; height: 80px; border-radius: 8px; object-fit: cover;">
+                            <div>
+                                <h2 id="profileName" style="color: #121417; font-size: 24px; font-family: Manrope; font-weight: 700; margin: 0 0 8px 0;">Member Name</h2>
+                                <p id="profileMemberId" style="color: #9B9B9B; font-size: 14px; font-family: Inter; margin: 0;">Member ID: 12345</p>
+                            </div>
+                        </div>
+
+                        <!-- Personal Information -->
+                        <div style="margin-bottom: 40px;">
+                            <h2 style="color: #121417; font-size: 20px; font-family: Manrope; font-weight: 700; margin-bottom: 24px;">Personal Information</h2>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-top: 1px solid #E5E8EB;">
+                                <div style="padding: 16px 24px 16px 0; border-bottom: 1px solid #E5E8EB;">
+                                    <div style="color: #9B9B9B; font-size: 13px; font-family: Inter; margin-bottom: 6px;">First Name</div>
+                                    <div id="profileFirstName" style="color: #121417; font-size: 15px; font-family: Inter; font-weight: 500;">-</div>
+                                </div>
+                                <div style="padding: 16px 0 16px 24px; border-bottom: 1px solid #E5E8EB; border-left: 1px solid #E5E8EB;">
+                                    <div style="color: #9B9B9B; font-size: 13px; font-family: Inter; margin-bottom: 6px;">Last Name</div>
+                                    <div id="profileLastName" style="color: #121417; font-size: 15px; font-family: Inter; font-weight: 500;">-</div>
+                                </div>
+                                <div style="padding: 16px 24px 16px 0; border-bottom: 1px solid #E5E8EB;">
+                                    <div style="color: #9B9B9B; font-size: 13px; font-family: Inter; margin-bottom: 6px;">Phone Number</div>
+                                    <div id="profilePhone" style="color: #121417; font-size: 15px; font-family: Inter; font-weight: 500;">-</div>
+                                </div>
+                                <div style="padding: 16px 0 16px 24px; border-bottom: 1px solid #E5E8EB; border-left: 1px solid #E5E8EB;">
+                                    <div style="color: #9B9B9B; font-size: 13px; font-family: Inter; margin-bottom: 6px;">Email</div>
+                                    <div id="profileEmail" style="color: #121417; font-size: 15px; font-family: Inter; font-weight: 500;">-</div>
+                                </div>
+                                <div style="padding: 16px 24px 16px 0; border-bottom: 1px solid #E5E8EB;">
+                                    <div style="color: #9B9B9B; font-size: 13px; font-family: Inter; margin-bottom: 6px;">Age</div>
+                                    <div id="profileAge" style="color: #121417; font-size: 15px; font-family: Inter; font-weight: 500;">-</div>
+                                </div>
+                                <div style="padding: 16px 0 16px 24px; border-bottom: 1px solid #E5E8EB; border-left: 1px solid #E5E8EB;">
+                                    <div style="color: #9B9B9B; font-size: 13px; font-family: Inter; margin-bottom: 6px;">Member For</div>
+                                    <div id="profileMemberFor" style="color: #121417; font-size: 15px; font-family: Inter; font-weight: 500;">-</div>
+                                </div>
+                                <div style="padding: 16px 24px 16px 0; border-bottom: 1px solid #E5E8EB;">
+                                    <div style="color: #9B9B9B; font-size: 13px; font-family: Inter; margin-bottom: 6px;">Total Attendances</div>
+                                    <div id="profileAttendances" style="color: #121417; font-size: 15px; font-family: Inter; font-weight: 500;">-</div>
+                                </div>
+                                <div style="padding: 16px 0 16px 24px; border-bottom: 1px solid #E5E8EB; border-left: 1px solid #E5E8EB;">
+                                    <div style="color: #9B9B9B; font-size: 13px; font-family: Inter; margin-bottom: 6px;">Last Attendance</div>
+                                    <div id="profileLastAttendance" style="color: #121417; font-size: 15px; font-family: Inter; font-weight: 500;">-</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Membership Details -->
+                        <div style="margin-bottom: 40px;">
+                            <h2 style="color: #121417; font-size: 20px; font-family: Manrope; font-weight: 700; margin-bottom: 24px;">Membership Details</h2>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid #E5E8EB;">
+                                <div style="padding: 20px 24px 20px 0; border-bottom: 1px solid #E5E8EB;">
+                                    <div style="color: #9B9B9B; font-size: 13px; font-family: Inter; margin-bottom: 6px;">Membership</div>
+                                    <div id="profileMembership" style="color: #121417; font-size: 15px; font-family: Inter; font-weight: 500;">-</div>
+                                </div>
+                                <div style="padding: 20px 24px; border-bottom: 1px solid #E5E8EB; border-left: 1px solid #E5E8EB;">
+                                    <div style="color: #9B9B9B; font-size: 13px; font-family: Inter; margin-bottom: 6px;">Contract</div>
+                                    <div style="color: #4A739C; font-size: 15px; font-family: Inter; font-weight: 500; cursor: pointer;">Download</div>
+                                </div>
+                                <div style="padding: 20px 0 20px 24px; border-bottom: 1px solid #E5E8EB; border-left: 1px solid #E5E8EB;">
+                                    <div style="color: #9B9B9B; font-size: 13px; font-family: Inter; margin-bottom: 6px;">Waiver</div>
+                                    <div style="color: #4A739C; font-size: 15px; font-family: Inter; font-weight: 500; cursor: pointer;">Download</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Information -->
+                        <div style="margin-bottom: 40px;">
+                            <h2 style="color: #121417; font-size: 20px; font-family: Manrope; font-weight: 700; margin-bottom: 24px;">Payment Information</h2>
+                            <div style="margin-bottom: 16px;">
+                                <div style="color: #9B9B9B; font-size: 13px; font-family: Inter; margin-bottom: 6px;">Payment Method</div>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <span id="profilePaymentMethod" style="color: #121417; font-size: 15px; font-family: Inter; font-weight: 500;">Visa - 1234</span>
+                                    <button style="background: #F0F2F5; color: #121417; border: none; padding: 6px 12px; font-size: 12px; border-radius: 6px; cursor: pointer; font-family: Inter;">Update</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment History -->
+                        <div>
+                            <div style="border-bottom: 1px solid #E5E8EB; margin-bottom: 0;">
+                                <div style="display: flex; gap: 40px; padding: 0;">
+                                    <button class="payment-tab" data-tab="paid" style="padding: 16px 0; border: none; background: none; color: #9B9B9B; font-size: 14px; font-family: Inter; font-weight: 700; border-bottom: 3px solid transparent; cursor: pointer;">Paid</button>
+                                    <button class="payment-tab" data-tab="unpaid" style="padding: 16px 0; border: none; background: none; color: #9B9B9B; font-size: 14px; font-family: Inter; font-weight: 700; border-bottom: 3px solid transparent; cursor: pointer;">Unpaid</button>
+                                    <button class="payment-tab active" data-tab="all" style="padding: 16px 0; border: none; background: none; color: #121417; font-size: 14px; font-family: Inter; font-weight: 700; border-bottom: 3px solid #4A739C; cursor: pointer;">All</button>
+                                    <button class="payment-tab" data-tab="invoices" style="padding: 16px 0; border: none; background: none; color: #9B9B9B; font-size: 14px; font-family: Inter; font-weight: 700; border-bottom: 3px solid transparent; cursor: pointer;">Invoices</button>
+                                </div>
+                            </div>
+
+                            <!-- Payment Table -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; background: white;">
+                                <div style="padding: 16px 24px 16px 0; color: #121417; font-size: 14px; font-family: Inter; font-weight: 600; border-bottom: 1px solid #E5E8EB;">Date</div>
+                                <div style="padding: 16px 24px; color: #121417; font-size: 14px; font-family: Inter; font-weight: 600; border-bottom: 1px solid #E5E8EB; text-align: center;">Amount</div>
+                                <div style="padding: 16px 0 16px 24px; color: #121417; font-size: 14px; font-family: Inter; font-weight: 600; border-bottom: 1px solid #E5E8EB; text-align: right;">Status</div>
+                            </div>
+                            <div id="paymentHistory">
+                                <!-- Payment history will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column - Notes and Tags -->
+                    <div style="flex: 0 0 350px;">
+                        <!-- Notes Section -->
+                        <div style="margin-bottom: 40px;">
+                            <h3 style="color: #121417; font-size: 20px; font-family: Manrope; font-weight: 700; margin: 0 0 16px 0;">Notes</h3>
+                            <div style="background: white; border: 1px solid #E5E8EB; border-radius: 8px; padding: 16px;">
+                                <textarea id="memberNotes" placeholder="Add notes about this member..." style="width: 100%; min-height: 120px; border: none; outline: none; resize: vertical; font-family: Inter; font-size: 14px; line-height: 1.5; color: #121417;"></textarea>
+                            </div>
+                            <button class="save-notes-btn" onclick="gymManager.saveNotes()" style="background: #4A739C; color: white; border: none; border-radius: 6px; padding: 8px 16px; font-size: 14px; font-family: Inter; cursor: pointer; margin-top: 12px;">Save Notes</button>
+                        </div>
+
+                        <!-- Tags Section -->
+                        <div>
+                            <h3 style="color: #121417; font-size: 20px; font-family: Manrope; font-weight: 700; margin: 0 0 16px 0;">Tags</h3>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
+                                <div id="memberTags"></div>
+                            </div>
+                            <button onclick="gymManager.addTag()" style="background: #F0F2F5; color: #121417; border: none; padding: 8px 16px; font-size: 14px; font-family: Inter; border-radius: 6px; cursor: pointer;">+ Add Tag</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Member Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Edit Member</h2>
+            <form id="editForm">
+                <input type="hidden" id="editMemberId">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label for="editFirstName">First Name</label>
+                        <input type="text" id="editFirstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editLastName">Last Name</label>
+                        <input type="text" id="editLastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editEmail">Email</label>
+                        <input type="email" id="editEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPhone">Phone</label>
+                        <input type="tel" id="editPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editMembershipType">Membership Type</label>
+                        <select id="editMembershipType" required>
+                            <option value="basic">Basic - $29/month</option>
+                            <option value="premium">Premium - $49/month</option>
+                            <option value="vip">VIP - $79/month</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editStartDate">Start Date</label>
+                        <input type="date" id="editStartDate" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Member</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        class GymManager {
+            constructor() {
+                this.members = [];
+                this.currentPage = 'dashboard';
+                this.membershipPrices = {
+                    basic: 29,
+                    premium: 49,
+                    vip: 79
+                };
+                
+                this.initEventListeners();
+                this.initFirebase();
+            }
+
+            async initFirebase() {
+                firebase.auth().onAuthStateChanged(async (user) => {
+                    if (user) {
+                        document.getElementById('authContainer').style.display = 'none';
+                        document.getElementById('mainApp').classList.remove('hidden');
+                        document.getElementById('userEmail').textContent = user.email;
+                        
+                        await this.loadMembers();
+                    } else {
+                        document.getElementById('authContainer').style.display = 'flex';
+                        document.getElementById('mainApp').classList.add('hidden');
+                        this.members = [];
+                    }
+                });
+            }
+
+            async loadMembers() {
+                try {
+                    const snapshot = await db.collection('members').get();
+                    this.members = snapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data(),
+                        startDate: doc.data().startDate.toDate(),
+                        joinDate: doc.data().joinDate.toDate(),
+                        checkIns: doc.data().checkIns.map(ci => ci.toDate())
+                    }));
+                    this.updateDashboard();
+                    this.updateMembersTable();
+                } catch (error) {
+                    console.error('Error loading members:', error);
+                }
+            }
+
+            initEventListeners() {
+                // Navigation
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const page = item.dataset.page;
+                        if (page === 'dashboard' || page === 'members') {
+                            this.showPage(page);
+                        }
+                    });
+                });
+
+                // Forms
+                document.getElementById('memberForm').addEventListener('submit', (e) => this.addMember(e));
+                document.getElementById('editForm').addEventListener('submit', (e) => this.updateMember(e));
+
+                // Modal
+                const modal = document.getElementById('editModal');
+                const closeBtn = document.querySelector('.close');
+                closeBtn.addEventListener('click', () => modal.style.display = 'none');
+                window.addEventListener('click', (e) => {
+                    if (e.target === modal) modal.style.display = 'none';
+                });
+
+                // Set default date
+                this.setDefaultDate();
+            }
+
+            showPage(pageName) {
+                // Update navigation - only highlight nav items that exist
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Only highlight navigation if it's a main page (not memberProfile)
+                if (pageName !== 'memberProfile') {
+                    const navItem = document.querySelector(`[data-page="${pageName}"]`);
+                    if (navItem) {
+                        navItem.classList.add('active');
+                    }
+                }
+
+                // Show page
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.add('hidden');
+                });
+                
+                const pageElement = document.getElementById(pageName + 'Page');
+                if (pageElement) {
+                    pageElement.classList.remove('hidden');
+                } else {
+                    console.error(`Page element not found: ${pageName}Page`);
+                }
+
+                this.currentPage = pageName;
+            }
+
+            async addMember(e) {
+                e.preventDefault();
+                
+                const member = {
+                    firstName: document.getElementById('firstName').value.trim(),
+                    lastName: document.getElementById('lastName').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    phone: document.getElementById('phone').value.trim(),
+                    membershipType: document.getElementById('membershipType').value,
+                    startDate: new Date(document.getElementById('startDate').value),
+                    joinDate: new Date(),
+                    checkIns: []
+                };
+
+                try {
+                    const docRef = await db.collection('members').add(member);
+                    member.id = docRef.id;
+                    
+                    this.members.unshift(member);
+                    document.getElementById('memberForm').reset();
+                    this.setDefaultDate();
+                    
+                    this.updateDashboard();
+                    this.updateMembersTable();
+                } catch (error) {
+                    console.error('Error adding member:', error);
+                    alert('Error adding member. Please try again.');
+                }
+            }
+
+            async deleteMember(id) {
+                if (confirm('Are you sure you want to delete this member?')) {
+                    try {
+                        await db.collection('members').doc(id).delete();
+                        this.members = this.members.filter(m => m.id !== id);
+                        this.updateDashboard();
+                        this.updateMembersTable();
+                    } catch (error) {
+                        console.error('Error deleting member:', error);
+                        alert('Error deleting member. Please try again.');
+                    }
+                }
+            }
+
+            editMember(id) {
+                const member = this.members.find(m => m.id === id);
+                if (!member) return;
+
+                document.getElementById('editMemberId').value = member.id;
+                document.getElementById('editFirstName').value = member.firstName;
+                document.getElementById('editLastName').value = member.lastName;
+                document.getElementById('editEmail').value = member.email;
+                document.getElementById('editPhone').value = member.phone;
+                document.getElementById('editMembershipType').value = member.membershipType;
+                document.getElementById('editStartDate').value = member.startDate.toISOString().split('T')[0];
+
+                document.getElementById('editModal').style.display = 'block';
+            }
+
+            async updateMember(e) {
+                e.preventDefault();
+                
+                const id = document.getElementById('editMemberId').value;
+                const member = this.members.find(m => m.id === id);
+                
+                if (!member) return;
+
+                const updatedData = {
+                    firstName: document.getElementById('editFirstName').value.trim(),
+                    lastName: document.getElementById('editLastName').value.trim(),
+                    email: document.getElementById('editEmail').value.trim(),
+                    phone: document.getElementById('editPhone').value.trim(),
+                    membershipType: document.getElementById('editMembershipType').value,
+                    startDate: new Date(document.getElementById('editStartDate').value)
+                };
+
+                try {
+                    await db.collection('members').doc(id).update(updatedData);
+                    Object.assign(member, updatedData);
+                    
+                    document.getElementById('editModal').style.display = 'none';
+                    this.updateDashboard();
+                    this.updateMembersTable();
+                } catch (error) {
+                    console.error('Error updating member:', error);
+                    alert('Error updating member. Please try again.');
+                }
+            }
+
+            async checkIn(id) {
+                const member = this.members.find(m => m.id === id);
+                if (!member) return;
+                
+                if (this.isExpired(member)) {
+                    alert('Cannot check in - membership has expired!');
+                    return;
+                }
+
+                const checkInTime = new Date();
+                try {
+                    await db.collection('members').doc(id).update({
+                        checkIns: firebase.firestore.FieldValue.arrayUnion(checkInTime)
+                    });
+                    
+                    member.checkIns.unshift(checkInTime);
+                    this.updateDashboard();
+                    this.updateMembersTable();
+                } catch (error) {
+                    console.error('Error recording check-in:', error);
+                    alert('Error recording check-in. Please try again.');
+                }
+            }
+
+            isExpired(member) {
+                const today = new Date();
+                const thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(today.getDate() - 30);
+                return member.startDate < thirtyDaysAgo;
+            }
+
+            getMembershipDuration(member) {
+                const now = new Date();
+                const joinDate = member.joinDate;
+                const diffTime = Math.abs(now - joinDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                if (diffDays < 30) {
+                    return `${diffDays} days`;
+                } else if (diffDays < 365) {
+                    const months = Math.floor(diffDays / 30);
+                    return `${months} month${months > 1 ? 's' : ''}`;
+                } else {
+                    const years = Math.floor(diffDays / 365);
+                    return `${years} year${years > 1 ? 's' : ''}`;
+                }
+            }
+
+            updateDashboard() {
+                const active = this.members.filter(m => !this.isExpired(m)).length;
+                const revenue = this.members
+                    .filter(m => !this.isExpired(m))
+                    .reduce((sum, m) => sum + this.membershipPrices[m.membershipType], 0);
+
+                document.getElementById('activeMembersCount').textContent = active;
+                document.getElementById('revenueAmount').textContent = `$${revenue.toLocaleString()}`;
+                document.getElementById('memberChange').textContent = `+${Math.floor(Math.random() * 10)} members`;
+            }
+
+            updateMembersTable() {
+                const tbody = document.getElementById('membersTableBody');
+                tbody.innerHTML = '';
+
+                this.members.forEach(member => {
+                    const row = document.createElement('div');
+                    row.className = 'table-row';
+                    row.onclick = () => this.viewMemberProfile(member.id);
+                    
+                    const isActive = !this.isExpired(member);
+                    const duration = this.getMembershipDuration(member);
+                    
+                    row.innerHTML = `
+                        <div class="table-cell name">${member.firstName}</div>
+                        <div class="table-cell name">${member.lastName}</div>
+                        <div class="table-cell membership">${member.membershipType.toUpperCase()}</div>
+                        <div class="table-cell">
+                            <div class="status-badge ${isActive ? 'active' : 'inactive'}">
+                                ${isActive ? 'Active' : 'Inactive'}
+                            </div>
+                        </div>
+                        <div class="table-cell membership">${duration}</div>
+                        <div class="table-cell">
+                            <button class="btn-edit" onclick="event.stopPropagation(); gymManager.editMember('${member.id}')">Edit</button>
+                            <button class="btn-danger" onclick="event.stopPropagation(); gymManager.deleteMember('${member.id}')">Delete</button>
+                            ${isActive ? `<button class="btn btn-primary" style="padding: 4px 8px; font-size: 12px; margin-left: 5px;" onclick="event.stopPropagation(); gymManager.checkIn('${member.id}')">Check In</button>` : ''}
+                        </div>
+                    `;
+                    
+                    tbody.appendChild(row);
+                });
+            }
+
+            viewMemberProfile(id) {
+                const member = this.members.find(m => m.id === id);
+                if (!member) return;
+                
+                this.currentMember = member;
+                this.populateMemberProfile(member);
+                this.showPage('memberProfile');
+            }
+
+            populateMemberProfile(member) {
+                // Profile Header
+                document.getElementById('profileName').textContent = `${member.firstName} ${member.lastName}`;
+                document.getElementById('profileMemberId').textContent = `Member ID: ${member.id.substring(0, 8)}`;
+                
+                // Personal Information
+                document.getElementById('profileFirstName').textContent = member.firstName;
+                document.getElementById('profileLastName').textContent = member.lastName;
+                document.getElementById('profilePhone').textContent = member.phone;
+                document.getElementById('profileEmail').textContent = member.email;
+                document.getElementById('profileAge').textContent = this.calculateAge(member.birthDate) || 'Not specified';
+                document.getElementById('profileMemberFor').textContent = this.getMembershipDuration(member);
+                document.getElementById('profileAttendances').textContent = member.checkIns.length;
+                
+                // Last attendance
+                const lastCheckIn = member.checkIns.length > 0 ? member.checkIns[0] : null;
+                document.getElementById('profileLastAttendance').textContent = lastCheckIn 
+                    ? this.formatDate(lastCheckIn) 
+                    : 'Never';
+                
+                // Membership Details
+                document.getElementById('profileMembership').textContent = 
+                    `${member.membershipType.toUpperCase()} - $${this.membershipPrices[member.membershipType]}/month`;
+                
+                // Notes
+                document.getElementById('memberNotes').value = member.notes || '';
+                
+                // Tags
+                this.renderMemberTags(member.tags || []);
+                
+                // Payment History
+                this.renderPaymentHistory(member);
+                
+                // Initialize payment tabs
+                this.initPaymentTabs();
+            }
+
+            calculateAge(birthDate) {
+                if (!birthDate) return null;
+                const today = new Date();
+                const birth = new Date(birthDate);
+                let age = today.getFullYear() - birth.getFullYear();
+                const monthDiff = today.getMonth() - birth.getMonth();
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+                    age--;
+                }
+                return age;
+            }
+
+            formatDate(date) {
+                return new Date(date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+            }
+
+            renderMemberTags(tags) {
+                const tagsContainer = document.getElementById('memberTags');
+                tagsContainer.innerHTML = '';
+                
+                tags.forEach(tag => {
+                    const tagElement = document.createElement('div');
+                    tagElement.className = 'tag-item';
+                    tagElement.innerHTML = `
+                        ${tag}
+                        <span class="tag-remove" onclick="gymManager.removeTag('${tag}')">&times;</span>
+                    `;
+                    tagsContainer.appendChild(tagElement);
+                });
+            }
+
+            addTag() {
+                const tag = prompt('Enter tag name:');
+                if (tag && tag.trim()) {
+                    if (!this.currentMember.tags) this.currentMember.tags = [];
+                    if (!this.currentMember.tags.includes(tag.trim())) {
+                        this.currentMember.tags.push(tag.trim());
+                        this.updateMemberInFirebase(this.currentMember);
+                        this.renderMemberTags(this.currentMember.tags);
+                    }
+                }
+            }
+
+            removeTag(tag) {
+                if (!this.currentMember.tags) return;
+                this.currentMember.tags = this.currentMember.tags.filter(t => t !== tag);
+                this.updateMemberInFirebase(this.currentMember);
+                this.renderMemberTags(this.currentMember.tags);
+            }
+
+            saveNotes() {
+                if (!this.currentMember) return;
+                
+                const notes = document.getElementById('memberNotes').value;
+                this.currentMember.notes = notes;
+                this.updateMemberInFirebase(this.currentMember);
+                
+                // Show success feedback
+                const btn = document.querySelector('.save-notes-btn');
+                const originalText = btn.textContent;
+                btn.textContent = 'Saved!';
+                btn.style.background = '#2D7D32';
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '#4A739C';
+                }, 2000);
+            }
+
+            async updateMemberInFirebase(member) {
+                try {
+                    await db.collection('members').doc(member.id).update({
+                        notes: member.notes || '',
+                        tags: member.tags || []
+                    });
+                    
+                    // Update local member object
+                    const localMember = this.members.find(m => m.id === member.id);
+                    if (localMember) {
+                        localMember.notes = member.notes;
+                        localMember.tags = member.tags;
+                    }
+                } catch (error) {
+                    console.error('Error updating member:', error);
+                    alert('Error saving changes. Please try again.');
+                }
+            }
+
+            renderPaymentHistory(member) {
+                const paymentHistory = document.getElementById('paymentHistory');
+                paymentHistory.innerHTML = '';
+                
+                // Generate sample payment history based on membership
+                const monthlyPayment = this.membershipPrices[member.membershipType];
+                const memberSince = new Date(member.startDate);
+                const today = new Date();
+                const monthsDiff = (today.getFullYear() - memberSince.getFullYear()) * 12 + 
+                                 (today.getMonth() - memberSince.getMonth());
+                
+                for (let i = 0; i <= Math.min(monthsDiff, 12); i++) {
+                    const paymentDate = new Date(memberSince);
+                    paymentDate.setMonth(paymentDate.getMonth() + i);
+                    
+                    if (paymentDate <= today) {
+                        const row = document.createElement('div');
+                        row.style.cssText = 'display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; background: white;';
+                        
+                        // Add some unpaid payments for variety
+                        const isUnpaid = i === monthsDiff && Math.random() > 0.7;
+                        
+                        row.innerHTML = `
+                            <div style="padding: 16px 24px 16px 0; color: #121417; font-size: 14px; font-family: Inter; border-bottom: 1px solid #E5E8EB;">
+                                ${this.formatDate(paymentDate)}
+                            </div>
+                            <div style="padding: 16px 24px; color: #121417; font-size: 14px; font-family: Inter; border-bottom: 1px solid #E5E8EB; text-align: center;">
+                                $${monthlyPayment}
+                            </div>
+                            <div style="padding: 16px 0 16px 24px; color: #121417; font-size: 14px; font-family: Inter; border-bottom: 1px solid #E5E8EB; text-align: right;">
+                                <span style="background: ${isUnpaid ? '#FFE6E6' : '#E8F5E8'}; color: ${isUnpaid ? '#D32F2F' : '#2D7D32'}; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 500;">
+                                    ${isUnpaid ? 'Unpaid' : 'Paid'}
+                                </span>
+                            </div>
+                        `;
+                        paymentHistory.appendChild(row);
+                    }
+                }
+            }
+
+            initPaymentTabs() {
+                document.querySelectorAll('.payment-tab').forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        document.querySelectorAll('.payment-tab').forEach(t => {
+                            t.classList.remove('active');
+                            t.style.color = '#9B9B9B';
+                            t.style.borderBottom = '3px solid transparent';
+                        });
+                        tab.classList.add('active');
+                        tab.style.color = '#121417';
+                        tab.style.borderBottom = '3px solid #4A739C';
+                        
+                        // Filter payment history based on tab
+                        // This is a placeholder - you can implement filtering logic here
+                    });
+                });
+            }
+
+            setDefaultDate() {
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('startDate').value = today;
+            }
+
+            async logout() {
+                try {
+                    await firebase.auth().signOut();
+                } catch (error) {
+                    console.error('Error signing out:', error);
+                }
+            }
+        }
+
+        // Authentication functions
+        function showAuthForm(formType) {
+            document.querySelectorAll('.auth-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
+            
+            document.querySelector(`.auth-tab:${formType === 'login' ? 'first-child' : 'last-child'}`).classList.add('active');
+            document.getElementById(`${formType}Form`).classList.add('active');
+        }
+
+        // Initialize app
+        const gymManager = new GymManager();
+
+        // Auth form handlers
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                await firebase.auth().signInWithEmailAndPassword(email, password);
+            } catch (error) {
+                alert('Login failed: ' + error.message);
+            }
+        });
+
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            
+            try {
+                await firebase.auth().createUserWithEmailAndPassword(email, password);
+            } catch (error) {
+                alert('Signup failed: ' + error.message);
+            }
+        });
+
+        // Sample data function
+        async function createSampleAccounts() {
+            try {
+                // Create admin account
+                await firebase.auth().createUserWithEmailAndPassword('admin@rollcall.com', 'admin123');
+                alert('Sample account created!\nEmail: admin@rollcall.com\nPassword: admin123');
+            } catch (error) {
+                if (error.code === 'auth/email-already-in-use') {
+                    alert('Sample account already exists!\nEmail: admin@rollcall.com\nPassword: admin123');
+                } else {
+                    console.error('Error creating sample account:', error);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
