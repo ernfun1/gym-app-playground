@@ -81,10 +81,14 @@
         }
 
         .nav-icon {
-            width: 23px;
-            height: 23px;
-            background: #0F1417;
-            border-radius: 2px;
+            width: 20px;
+            height: 20px;
+            fill: #0F1417;
+            transition: fill 0.2s;
+        }
+
+        .nav-item:hover .nav-icon, .nav-item.active .nav-icon {
+            fill: #0F1417;
         }
 
         /* Main Content */
@@ -656,35 +660,51 @@
             
             <nav class="nav-menu">
                 <div class="nav-item active" data-page="dashboard">
-                    <div class="nav-icon"></div>
+                    <svg class="nav-icon" viewBox="0 0 24 24">
+                        <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                    </svg>
                     <span>Dashboard</span>
                 </div>
                 <div class="nav-item" data-page="members">
-                    <div class="nav-icon"></div>
+                    <svg class="nav-icon" viewBox="0 0 24 24">
+                        <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0 0 18.54 8H17c-.8 0-1.54.37-2.01.99L14 10l-1.99-1.01A2.5 2.5 0 0 0 10 8H8.46c-.8 0-1.52.48-1.83 1.21L5 15h2.5v7h4v-7h1v7h4zm-11.5-9.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5S7 10.17 7 11s.67 1.5 1.5 1.5zm3 .5h-3c-.83 0-1.5.67-1.5 1.5V22h6v-7.5c0-.83-.67-1.5-1.5-1.5z"/>
+                    </svg>
                     <span>Members</span>
                 </div>
                 <div class="nav-item" data-page="leads">
-                    <div class="nav-icon"></div>
+                    <svg class="nav-icon" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
                     <span>Leads</span>
                 </div>
                 <div class="nav-item" data-page="schedule">
-                    <div class="nav-icon"></div>
+                    <svg class="nav-icon" viewBox="0 0 24 24">
+                        <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                    </svg>
                     <span>Schedule</span>
                 </div>
                 <div class="nav-item" data-page="financial">
-                    <div class="nav-icon"></div>
+                    <svg class="nav-icon" viewBox="0 0 24 24">
+                        <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+                    </svg>
                     <span>Financial</span>
                 </div>
                 <div class="nav-item" data-page="web-mobile">
-                    <div class="nav-icon"></div>
+                    <svg class="nav-icon" viewBox="0 0 24 24">
+                        <path d="M17 1H7c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2zM7 4V3h10v1H7zm0 14V6h10v12H7zm0 3v-1h10v1H7z"/>
+                    </svg>
                     <span>Web & Mobile</span>
                 </div>
                 <div class="nav-item" data-page="analytics">
-                    <div class="nav-icon"></div>
+                    <svg class="nav-icon" viewBox="0 0 24 24">
+                        <path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/>
+                    </svg>
                     <span>Analytics</span>
                 </div>
                 <div class="nav-item" data-page="account">
-                    <div class="nav-icon"></div>
+                    <svg class="nav-icon" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
                     <span>Account</span>
                 </div>
             </nav>
@@ -695,7 +715,9 @@
             <!-- Header -->
             <div class="header">
                 <div class="search-container">
-                    <div class="search-icon"></div>
+                    <svg style="width: 20px; height: 20px; fill: #5C738A; margin: 0 15px;" viewBox="0 0 24 24">
+                        <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                    </svg>
                     <input type="text" class="search-input" placeholder="Search" id="globalSearch">
                 </div>
                 
@@ -713,7 +735,9 @@
                 <div class="filter-controls">
                     <button class="filter-btn">
                         Last 30 days
-                        <div class="filter-icon"></div>
+                        <svg style="width: 16px; height: 16px; fill: #0F1417;" viewBox="0 0 24 24">
+                            <path d="M7 10l5 5 5-5z"/>
+                        </svg>
                     </button>
                 </div>
                 
@@ -787,15 +811,21 @@
                 <div class="filter-controls">
                     <button class="filter-btn" data-filter="membership">
                         Membership
-                        <div class="filter-icon"></div>
+                        <svg style="width: 16px; height: 16px; fill: #0F1417;" viewBox="0 0 24 24">
+                            <path d="M7 10l5 5 5-5z"/>
+                        </svg>
                     </button>
                     <button class="filter-btn" data-filter="status">
                         Status
-                        <div class="filter-icon"></div>
+                        <svg style="width: 16px; height: 16px; fill: #0F1417;" viewBox="0 0 24 24">
+                            <path d="M7 10l5 5 5-5z"/>
+                        </svg>
                     </button>
                     <button class="filter-btn" data-filter="attention">
                         Needs Attention
-                        <div class="filter-icon"></div>
+                        <svg style="width: 16px; height: 16px; fill: #0F1417;" viewBox="0 0 24 24">
+                            <path d="M7 10l5 5 5-5z"/>
+                        </svg>
                     </button>
                 </div>
                 
