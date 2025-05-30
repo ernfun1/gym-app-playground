@@ -1560,14 +1560,20 @@
         // Sample data function
         async function createSampleAccounts() {
             try {
+                // If user is already logged in, sign them out first
+                if (firebase.auth().currentUser) {
+                    await firebase.auth().signOut();
+                }
+                
                 // Create admin account
                 await firebase.auth().createUserWithEmailAndPassword('admin@rollcall.com', 'admin123');
-                alert('Sample account created!\nEmail: admin@rollcall.com\nPassword: admin123');
+                alert('✅ Sample account created successfully!\n\nLogin Credentials:\n📧 Email: admin@rollcall.com\n🔒 Password: admin123\n\nYou can now login with these credentials.');
             } catch (error) {
                 if (error.code === 'auth/email-already-in-use') {
-                    alert('Sample account already exists!\nEmail: admin@rollcall.com\nPassword: admin123');
+                    alert('✅ Sample account already exists!\n\nLogin Credentials:\n📧 Email: admin@rollcall.com\n🔒 Password: admin123\n\nYou can login with these credentials now.');
                 } else {
                     console.error('Error creating sample account:', error);
+                    alert('❌ Error creating sample account: ' + error.message);
                 }
             }
         }
